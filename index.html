@@ -7,6 +7,12 @@
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA: Link to the Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- PWA: Theme color for browser UI -->
+    <meta name="theme-color" content="#4f46e5">
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -262,9 +268,9 @@
 
                 console.log("Sending payload:", JSON.stringify(payload)); // Log the payload being sent
 
-                // API Key is automatically provided by the Canvas environment if left empty
-                // For local browser use, replace "" with your actual Gemini API key obtained from Google AI Studio.
-                const apiKey = "AIzaSyD5vn8wMNPSwVgLrIku1HxR3h2Hpek9kJA"; 
+                // IMPORTANT: For local browser use, replace "" with your actual Gemini API key obtained from Google AI Studio.
+                // When deployed via Canvas Preview, the API key is automatically provided.
+                const apiKey = "AIzaSyD5vn8wMNPSwVgLrIku1HxR3h2Hpek9kJA";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 // Make the API call to Gemini
@@ -314,6 +320,20 @@
                 sendMessage();
             }
         });
+
+        // PWA: Register Service Worker
+        // This script registers the service worker if the browser supports it.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
